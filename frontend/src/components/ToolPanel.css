@@ -1,0 +1,132 @@
+.tool-panel {
+  width: 250px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tool-panel-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.tool-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tool-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 5px;
+}
+
+.tool-value {
+  font-size: 0.9rem;
+  color: #6c757d;
+  font-weight: 400;
+  background-color: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: #dee2e6;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+.slider::-webkit-slider-thumb:active {
+  transform: scale(0.95);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  background: #0056b3;
+  transform: scale(1.1);
+}
+
+.slider::-moz-range-thumb:active {
+  transform: scale(0.95);
+}
+
+.brush-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin-top: 5px;
+}
+
+.brush-preview-dot {
+  background-color: #000;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.tool-section-info {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #dee2e6;
+}
+
+.info-text {
+  font-size: 0.85rem;
+  color: #6c757d;
+  line-height: 1.5;
+  margin: 0;
+  text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+  .tool-panel {
+    width: 100%;
+    max-width: 500px;
+  }
+}
