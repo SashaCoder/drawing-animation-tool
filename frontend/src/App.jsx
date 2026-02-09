@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import './App.css'
+import ToolPanel from './components/ToolPanel'
 
 function App() {
   const canvasRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [context, setContext] = useState(null)
+  const [brushSize, setBrushSize] = useState(3)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -12,11 +14,17 @@ function App() {
       const ctx = canvas.getContext('2d')
       ctx.lineCap = 'round'
       ctx.lineJoin = 'round'
-      ctx.lineWidth = 3
+      ctx.lineWidth = brushSize
       ctx.strokeStyle = '#000000'
       setContext(ctx)
     }
   }, [])
+
+  useEffect(() => {
+    if (context) {
+      context.lineWidth = brushSize
+    }
+  }, [brushSize, context])
 
   const startDrawing = (e) => {
     if (!context) return
@@ -60,21 +68,28 @@ function App() {
       </header>
       
       <main className="app-main">
-        <canvas
-          ref={canvasRef}
-          width={800}
-          height={600}
-          className="drawing-canvas"
-          onMouseDown={startDrawing}
-          onMouseMove={draw}
-          onMouseUp={stopDrawing}
-          onMouseLeave={stopDrawing}
+        <ToolPanel 
+          brushSize={brushSize}
+          onBrushSizeChange={setBrushSize}
         />
         
-        <div className="controls">
-          <button onClick={clearCanvas} className="clear-button">
-            Clear
-          </button>
+        <div className="canvas-container">
+          <canvas
+            ref={canvasRef}
+            width={800}
+            height={600}
+            className="drawing-canvas"
+            onMouseDown={startDrawing}
+            onMouseMove={draw}
+            onMouseUp={stopDrawing}
+            onMouseLeave={stopDrawing}
+          />
+          
+          <div className="controls">
+            <button onClick={clearCanvas} className="clear-button">
+              Clear
+            </button>
+          </div>
         </div>
       </main>
     </div>
