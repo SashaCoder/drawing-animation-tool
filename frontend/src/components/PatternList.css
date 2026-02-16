@@ -1,0 +1,43 @@
+.pattern-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+.pattern-list-empty {
+  padding: 32px;
+  text-align: center;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 8px;
+  border: 2px dashed #ddd;
+}
+
+.pattern-list-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* Scrollbar styling */
+.pattern-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.pattern-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.pattern-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.pattern-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
