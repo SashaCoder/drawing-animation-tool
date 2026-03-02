@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './ToolPanel.css'
 
-function ToolPanel({ brushSize, onBrushSizeChange }) {
+function ToolPanel({ brushSize, onBrushSizeChange, activePattern, onClearPattern }) {
   return (
     <div className="tool-panel">
       <h3 className="tool-panel-title">Tools</h3>
@@ -29,9 +29,29 @@ function ToolPanel({ brushSize, onBrushSizeChange }) {
           />
         </div>
       </div>
+
+      {activePattern && (
+        <div className="tool-section active-pattern-section">
+          <label className="tool-label">Active Pattern</label>
+          <div className="active-pattern-info">
+            <p className="active-pattern-name">{activePattern.name}</p>
+            <p className="active-pattern-type">{activePattern.type}</p>
+            <button 
+              onClick={onClearPattern}
+              className="clear-pattern-btn"
+            >
+              Clear Pattern
+            </button>
+          </div>
+        </div>
+      )}
       
       <div className="tool-section-info">
-        <p className="info-text">Click and drag on the canvas to draw</p>
+        <p className="info-text">
+          {activePattern 
+            ? 'Drawing with pattern mode' 
+            : 'Click and drag on the canvas to draw'}
+        </p>
       </div>
     </div>
   )
