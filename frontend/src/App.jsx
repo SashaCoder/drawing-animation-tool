@@ -2,14 +2,26 @@ import { useState, useRef, useEffect } from 'react'
 import './App.css'
 import ToolPanel from './components/ToolPanel'
 import PatternManager from './components/PatternManager'
+import UndoRedoControls from './components/UndoRedoControls'
 import { defaultPatterns } from './data/defaultPatterns'
 import { generatePatternId, renderPattern } from './utils/patternUtils'
+import { 
+  captureCanvasState, 
+  performUndo, 
+  performRedo, 
+  pushToUndoStack,
+  clearRedoStack 
+} from './utils/undoRedoUtils'
 
 function App() {
   const canvasRef = useRef(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [context, setContext] = useState(null)
   const [brushSize, setBrushSize] = useState(3)
+  
+  // Undo/Redo state management
+  const [undoStack, setUndoStack] = useState([])
+  const [redoStack, setRedoStack] = useState([])
   
   // Pattern state management
   const [maxPatterns, setMaxPatterns] = useState(16)
@@ -51,6 +63,15 @@ function App() {
 
   const startDrawing = (e) => {
     if (!context) return
+    
+    // Save canvas state BEFORE starting to draw
+    // This captures the state we'll want to undo back to
+    const state = captureCanvasState(canvasRef.current)
+    if (state) {
+      setUndoStack(prev => pushToUndoStack(prev, state))
+      // Clear redo stack when new action occurs
+      setRedoStack(clearRedoStack())
+    }
     
     const rect = canvasRef.current.getBoundingClientRect()
     const x = e.clientX - rect.left
@@ -107,10 +128,47 @@ function App() {
     context.closePath()
     setIsDrawing(false)
   }
+  
+  // Save current canvas state to undo stack
+  const saveCanvasState = () => {
+    if (!canvasRef.current) return
+    
+    const state = captureCanvasState(canvasRef.current)
+    if (state) {
+      setUndoStack(prev => pushToUndoStack(prev, state))
+      // Clear redo stack when new action occurs
+      setRedoStack(clearRedoStack())
+    }
+  }
 
   const clearCanvas = () => {
     if (!context || !canvasRef.current) return
+    
+    // Save state before clearing
+    const state = captureCanvasState(canvasRef.current)
+    if (state) {
+      setUndoStack(prev => pushToUndoStack(prev, state))
+      setRedoStack(clearRedoStack())
+    }
+    
     context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+  }
+  
+  // Undo/Redo handlers
+  const handleUndo = () => {
+    if (!canvasRef.current || undoStack.length === 0) return
+    
+    const result = performUndo(canvasRef.current, undoStack, redoStack)
+    setUndoStack(result.undoStack)
+    setRedoStack(result.redoStack)
+  }
+  
+  const handleRedo = () => {
+    if (!canvasRef.current || redoStack.length === 0) return
+    
+    const result = performRedo(canvasRef.current, undoStack, redoStack)
+    setUndoStack(result.undoStack)
+    setRedoStack(result.redoStack)
   }
 
   // CRUD Operations for Patterns
@@ -203,6 +261,16 @@ function App() {
           />
           
           <div className="controls">
+            <UndoRedoControls 
+              onUndo={handleUndo}
+              onRedo={handleRedo}
+              canUndo={undoStack.length > 0}
+              canRedo={redoStack.length > 0}
+              undoCount={undoStack.length}
+              redoCount={redoStack.length}
+              showCounts={true}
+            />
+            
             <button onClick={clearCanvas} className="clear-button">
               Clear Canvas
             </button>
